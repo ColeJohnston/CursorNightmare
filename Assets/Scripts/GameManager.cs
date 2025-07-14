@@ -36,10 +36,33 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         currentGameState = GameState.MainMenu;
+        UIManager.Instance.ChangeUI(currentGameState);
     }
-    // Update is called once per frame
-    void Update()
+
+    public void mainMenu()
     {
-        
+        currentGameState = GameState.MainMenu;
+        UIManager.Instance.ChangeUI(currentGameState);
     }
+
+    public void startGame()
+    {
+        currentGameState = GameState.Playing;
+        UIManager.Instance.ChangeUI(currentGameState);
+    }
+    public void pauseGame()
+    {
+        currentGameState = GameState.Paused;
+        UIManager.Instance.ChangeUI(currentGameState);
+    }
+
+    public void gameOver()
+    {
+        currentGameState = GameState.GameOver;
+        UIManager.Instance.ChangeUI(currentGameState);
+    }
+
+
+
+
 }
