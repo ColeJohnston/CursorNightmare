@@ -41,16 +41,23 @@ public class WallSpawner : MonoBehaviour
                 print(spawnInterval);
             }
 
-            if (TimeSinceLastSpawn >= spawnInterval)
-            {
-                SpawnWall();
-                TimeSinceLastSpawn = 0f; // Reset the timer after spawning a wall
-            }
-            else
-            {
-                TimeSinceLastSpawn += Time.deltaTime; // Increment the timer
-            }
+            //if (TimeSinceLastSpawn >= spawnInterval)
+            //{
+            //    SpawnWall();
+            //    TimeSinceLastSpawn = 0f; // Reset the timer after spawning a wall
+            //}
+            //else
+            //{
+            //    TimeSinceLastSpawn += Time.deltaTime; // Increment the timer
+            //}
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        transform.position = Camera.main.ViewportToWorldPoint(new Vector3(1.2f, .5f, Camera.main.nearClipPlane));
+        SpawnWall();
+        print("spawning");
     }
 
 
