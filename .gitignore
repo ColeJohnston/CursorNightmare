@@ -10,6 +10,7 @@ MemoryCaptures/
 
 # Visual Studio
 .vscode/
+.vs/
 *.csproj
 *.unityproj
 *.sln

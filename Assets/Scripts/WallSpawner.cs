@@ -8,8 +8,8 @@ public class WallSpawner : MonoBehaviour
 
     public float distanceFromCeiling = .1f; // Distance from the ceiling to spawn walls (percentage of screen height)
 
-    public float gapInWalls = .25f; // Gap between walls percentage of screen height
-    public float gapBetweenWallsMin = 0.05f;
+    public float gapInWalls = .5f; // Gap between walls percentage of screen height
+    public float gapBetweenWallsMin = 0.175f;
 
     public float spawnInterval = 2f; // Time interval between wall spawns
     public float spawnIntervalMin = 0.5f; // Minimum time interval between wall spawns
@@ -32,15 +32,16 @@ public class WallSpawner : MonoBehaviour
         {
             if (gapInWalls > gapBetweenWallsMin)
             {
-                gapInWalls *= .99f;
+                gapInWalls -= Time.deltaTime * 0.025f; // Gradually decrease the gap between walls
             }
 
             if (spawnInterval > spawnIntervalMin)
             {
-                spawnInterval *= .99f;
+                spawnInterval -= Time.deltaTime * 0.025f; // Gradually decrease the spawn interval
+                print(spawnInterval);
             }
 
-            if( TimeSinceLastSpawn >= spawnInterval)
+            if (TimeSinceLastSpawn >= spawnInterval)
             {
                 SpawnWall();
                 TimeSinceLastSpawn = 0f; // Reset the timer after spawning a wall
@@ -55,14 +56,21 @@ public class WallSpawner : MonoBehaviour
 
     void SpawnWall()
     {
-        float ySpawn = Random.Range(0 + distanceFromCeiling, 1 - distanceFromCeiling);
+        float ySpawn = Random.Range(distanceFromCeiling + gapInWalls, 1 - (distanceFromCeiling + gapInWalls));
 
-        Vector3 topWallSpawnPosition = new Vector3(transform.position.x, ySpawn + (gapInWalls / 2f), transform.position.z);
-        Instantiate(wallPrefab, topWallSpawnPosition, Quaternion.identity);
+        float upperBound = ySpawn + .5f + (gapInWalls / 2);
+        float lowerBound = ySpawn - .5f - (gapInWalls / 2);
 
-        Vector3 bottomWallSpawnPosition = new Vector3(transform.position.x, ySpawn - (gapInWalls / 2f), transform.position.z);
-        Instantiate(wallPrefab, bottomWallSpawnPosition, Quaternion.identity);
+        Instantiate(wallPrefab, new Vector3(transform.position.x, PercentToWorldSpace(upperBound), transform.position.z), Quaternion.identity);
+
+        GameObject temp = Instantiate(wallPrefab, new Vector3(transform.position.x, PercentToWorldSpace(lowerBound), transform.position.z), Quaternion.identity);
+        temp.GetComponent<SpriteRenderer>().color = Color.rebeccaPurple;
 
 
     }
+
+    private float PercentToWorldSpace(float percentage)
+        {
+        return Camera.main.ViewportToWorldPoint(new Vector3(0, percentage, Camera.main.nearClipPlane)).y;
+        }
 }
